@@ -1,0 +1,105 @@
+V2.1 MAVLINK AND MLRS NEW VIEW TELEMETRY
+Setting up mLRS with ArduPilot (MAVLink) or INAV
+================================================================================
+
+This edition runs on the same radios as V2.1 ELRS & CRSF New View Telemetry and still works with
+ExpressLRS / Crossfire and Betaflight. It adds support for mLRS.
+
+HOW IT WORKS
+  EdgeTX cannot read raw MAVLink. mLRS solves this: when the mLRS Tx module is set
+  to CRSF in EdgeTX, it turns the flight controller's MAVLink stream into normal
+  CRSF telemetry sensors (GPS, FM, RxBt, Bat%, Sats, Yaw and so on). New View reads
+  those sensors, exactly as it does with ExpressLRS.
+
+  So you need BOTH of these:
+    - mLRS in CRSF mode (not mBridge mode, not "MAVLink only")
+    - MAVLink telemetry from the flight controller to the mLRS receiver
+
+  Other MAVLink links that do not make CRSF sensors (for example ExpressLRS in its
+  MAVLink mode, or a separate telemetry radio) will NOT work: the widget will show
+  "NO TELEMETRY".
+
+
+--------------------------------------------------------------------------------
+1. RADIO (EdgeTX)
+--------------------------------------------------------------------------------
+  MDL > Model Setup > External RF (or SYS > Hardware for an internal module):
+    Mode         CRSF
+    Baud rate    400K   (mLRS only supports 400K)
+
+
+--------------------------------------------------------------------------------
+2. mLRS Tx MODULE  (mLRS Lua script, CLI or OLED)
+--------------------------------------------------------------------------------
+    Tx Ch Source       crsf
+    Tx Ser Dest        serial, serial2 or wbridge (whatever you use for a ground station)
+    Tx Ser Baudrate    115200
+    Tx Snd RadioStat   1 Hz
+  Most of these are the defaults on a freshly flashed module.
+
+
+--------------------------------------------------------------------------------
+3. mLRS RECEIVER
+--------------------------------------------------------------------------------
+    Rx Out Mode        crsf
+    Rx Ser Link Mode   mavlinkX
+    Rx Ser Baudrate    the same as the flight controller port below (57600 default)
+    Rx Snd RadioStat   ardu_1
+
+
+--------------------------------------------------------------------------------
+4. ArduPilot
+--------------------------------------------------------------------------------
+  On the serial port wired to the mLRS receiver's serial pins:
+    SERIALx_PROTOCOL   2   (MAVLink 2)
+    SERIALx_BAUD       57  (57600, same as Rx Ser Baudrate)
+    SERIALx_OPTIONS    4096
+
+  Stream rates for that port (MAVy_... on ArduPilot 4.7+, SRy_... on older versions;
+  y counts MAVLink ports, not the SERIAL number). Copter has these OFF by default,
+  and the widget needs them:
+    POSITION 2   EXTRA1 4   EXTRA2 4   EXTRA3 2   EXT_STAT 2
+  POSITION gives the GPS position, EXTRA1 the attitude (Yaw, Roll, Pitch),
+  EXTRA2 and EXTRA3 the speed and battery, EXT_STAT the satellite count.
+
+  RC over CRSF (a second wire to another port, as in the mLRS docs):
+    SERIALx_PROTOCOL 23, RC_PROTOCOLS 512 or 536, RSSI_TYPE 3 or 5
+
+  Full details: the mLRS documentation, page "CRSF" (github.com/olliw42/mLRS-docu).
+
+
+--------------------------------------------------------------------------------
+5. INAV
+--------------------------------------------------------------------------------
+  INAV over mLRS uses MSP. Follow the mLRS documentation page "INAV". mLRS then sends
+  INAV's usual CRSF values, so New View behaves as it does with INAV over ExpressLRS.
+
+
+--------------------------------------------------------------------------------
+6. DISCOVER THE SENSORS
+--------------------------------------------------------------------------------
+  With the craft powered and the link connected: MDL > Telemetry > "Delete all
+  sensors", then "Discover new". Wait 20 seconds and stop discovery. Check these
+  are there and updating: GPS, Sats, FM, RxBt, RQly, 1RSS, Yaw, GAlt.
+  If GPS or Sats are missing, check the ArduPilot stream rates in part 4.
+
+
+--------------------------------------------------------------------------------
+7. WHAT IS DIFFERENT WITH ArduPilot
+--------------------------------------------------------------------------------
+  - Flight mode shows the ArduPilot mode name: STAB, ALTH, LOIT, AUTO, RTL, LAND...
+    ARMED / DISARMED comes from the "*" mLRS adds to the mode while disarmed.
+  - Height: ArduPilot does not send a barometer altitude through mLRS, so "Alt" is
+    the GPS altitude above where home was set. It is a little less steady than a
+    barometer reading.
+  - Failsafe: ArduPilot does not send a failsafe flag. You see its failsafe action
+    as a mode change instead (for example RTL or LAND), not the FAILSAFE banner.
+  - Everything else (map, trail, home, zoom, limits, beeps) works the same.
+
+
+--------------------------------------------------------------------------------
+8. TESTING STATUS
+--------------------------------------------------------------------------------
+  Tested in the EdgeTX simulator with simulated mLRS/ArduPilot telemetry, made
+  to match the values the mLRS source code sends. Not yet flown on real mLRS hardware.
+  Please report what you see on the TESTER FEEDBACK FORM.

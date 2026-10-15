@@ -1,0 +1,45 @@
+V2.1 ELRS & CRSF NEW VIEW TELEMETRY - TESTER FEEDBACK FORM
+==============================================
+Fill in what you can, then send this file back with any photos.
+
+ABOUT YOUR SETUP
+  Your name / callsign:
+  Radio model:
+  EdgeTX version (SYS > Version):
+  Radio link (ELRS / Crossfire / mLRS) and version:
+  Telemetry ratio (ELRS):
+  Flight controller firmware and version (Betaflight / iNav / ArduPilot):
+  Craft type (quad, wing, plane...):
+  Map tiles made with (GMapCatcher / tile maker) and zoom levels:
+
+INSTALL                                               OK / PROBLEM  (notes)
+  Copying the widget to the SD card                   
+  Making map tiles                                    
+  Copying tiles to the SD card                        
+  Discovering sensors                                 
+  Adding the widget to a screen                       
+  Widget settings                                     
+
+ON THE RADIO                                          OK / PROBLEM  (notes)
+  Load screen fits the screen                         
+  "NO TELEMETRY" / "WAITING FOR GPS" messages         
+  Map appears at GPS fix                              
+  Map lines up with the real world                    
+  Zoom switch                                         
+  Cursor direction (nose / track)                     
+  Home set on arming                                  
+  Home reset switch                                   
+  Trail                                               
+  Panel values (battery, sats, alt, speed, home, LQ)  
+  Warning colours and beeps                           
+  GPS LOST                                            
+  Screen speed (smooth / laggy)                       
+
+ANY ERRORS OR CRASHES (what happened, what was on screen):
+
+
+WHAT WOULD YOU CHANGE OR ADD:
+
+
+ANYTHING IN THE INSTRUCTIONS THAT WAS CONFUSING:
+

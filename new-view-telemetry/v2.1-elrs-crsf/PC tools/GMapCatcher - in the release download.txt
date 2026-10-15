@@ -1,0 +1,4 @@
+GMapCatcher (map downloader for Windows) is in the full package on the Releases page:
+https://github.com/New-View-Drone-Solutions/edgetx-widgets/releases
+
+It is free software under the GNU GPL v2 by the GMapCatcher team, not made by NVFPV.

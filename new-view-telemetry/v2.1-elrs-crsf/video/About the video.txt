@@ -1,0 +1,5 @@
+New View Telemetry - Video Tutorial.mp4 (1920x1080, about 4 minutes, captions on screen, no sound)
+
+It shows each step: copying the files, making map tiles, finding the telemetry sensors,
+adding the widget and its settings, then the load screen, flying, zoom, home reset,
+warnings and GPS lost. Recorded in the EdgeTX simulator (HelloRadioSky V15) with simulated telemetry.

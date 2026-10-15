@@ -1,0 +1,2 @@
+The video tutorial (New View Telemetry - Video Tutorial.mp4) is in the full package on the Releases page:
+https://github.com/New-View-Drone-Solutions/edgetx-widgets/releases

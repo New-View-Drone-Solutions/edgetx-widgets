@@ -1,0 +1,482 @@
+V2.1 ELRS & CRSF NEW VIEW TELEMETRY  by NVFPV
+Step-by-step install and test instructions (tester build)
+================================================================================
+
+Read this file from top to bottom the first time. Every step says exactly what to
+press and what you should see. If what you see is different, stop and check the
+TROUBLESHOOTING section (part 12) before going on.
+
+The PDF "New View Telemetry - User Guide.pdf" has pictures of most of these steps,
+and the "screenshots" folder has pictures of the radio screens. The video in the
+"video" folder shows the whole process in about 4 minutes (no sound, captions only).
+Where this file and the PDF differ, this file is the newer one.
+
+
+CONTENTS
+  1.  What is in this folder
+  2.  What you need
+  3.  Check your radio's EdgeTX version
+  4.  Back up your SD card
+  5.  Copy the widget onto the SD card
+  6.  Make map tiles for your flying field
+  7.  Copy the map tiles onto the SD card
+  8.  Find the telemetry sensors
+  9.  Add the widget to a screen
+  10. Set up the widget
+  11. Bench test (props off!)
+  12. Troubleshooting
+  13. Using it in flight
+  14. What to test and what to report back
+  15. Removing the widget
+
+
+--------------------------------------------------------------------------------
+1. WHAT IS IN THIS FOLDER
+--------------------------------------------------------------------------------
+
+  INSTRUCTIONS - STEP BY STEP.txt     This file.
+  START HERE.txt                      The short version of these instructions.
+  TESTER FEEDBACK FORM.txt            Fill this in after testing and send it back.
+  New View Telemetry - User Guide.pdf Full guide with pictures.
+
+  SD card\                            Everything that goes on the radio's SD card:
+      WIDGETS\NewView\main.lua            the widget itself
+      WIDGETS\NewView\splash\             the load screen pictures (5 screen sizes)
+      IMAGES\NewView\sat_tiles\           EMPTY folder where your map tiles go
+
+  PC tools\                           Windows programs for making map tiles:
+      GMapCatcher\maps.exe                map downloader (Option A, easiest)
+      make_map_tiles.bat / .py            free satellite tile maker (Option B)
+      HOW TO MAKE MAP TILES.txt           extra detail about tiles
+
+  screenshots\                        Pictures of the radio screens, so you know what to expect.
+  video\                              Video tutorial.
+
+  THIS PACK HAS NO MAP TILES. You make tiles for your own flying area in part 6.
+  Without tiles the widget still works, but the map is plain grey.
+
+
+--------------------------------------------------------------------------------
+2. WHAT YOU NEED
+--------------------------------------------------------------------------------
+
+  [ ] An EdgeTX radio with a COLOUR screen (for example RadioMaster TX16S,
+      HelloRadioSky V12 / V14 / V15 / V16, Jumper T16/T18, FrSky Horus, Flysky PA01).
+      Black-and-white screen radios (Zorro, Boxer, Pocket, etc.) are NOT supported.
+  [ ] EdgeTX 2.11 or newer. (HelloRadioSky V15 needs EdgeTX 2.12 or newer.)
+  [ ] ExpressLRS (ELRS) or TBS Crossfire / Tracer, with telemetry turned ON.
+  [ ] A flight controller that sends GPS over CRSF telemetry, for example Betaflight
+      or iNav with a GPS module fitted and working.
+      (ArduPilot through mLRS set to CRSF mode should also work but has NOT been tested
+      yet. If you fly mLRS, please test it and tell us. Plain MAVLink is not supported.)
+  [ ] A Windows PC, and either a micro-SD card reader or the radio's USB cable.
+  [ ] About 30 minutes for the first install.
+
+
+--------------------------------------------------------------------------------
+3. CHECK YOUR RADIO'S EDGETX VERSION
+--------------------------------------------------------------------------------
+
+  1. Turn the radio on.
+  2. Press the SYS key (on touch radios you can also tap the EdgeTX logo at the top
+     left of the main screen, then tap "Radio Setup").
+  3. Page across the tabs (PAGE> key, or tap the tabs at the top) until you reach the
+     "Version" tab (an "i" icon on some radios).
+  4. Read the "FW Version" line. It must say 2.11.x or higher (2.12.x or higher on
+     the HelloRadioSky V15).
+  5. If it is older, update EdgeTX first with EdgeTX Buddy (https://buddy.edgetx.org)
+     and copy the matching SD card contents for that version. Then come back here.
+  6. Press RTN / EXIT until you are back on the main screen.
+
+
+--------------------------------------------------------------------------------
+4. BACK UP YOUR SD CARD
+--------------------------------------------------------------------------------
+
+  Nothing in this pack deletes or overwrites your files, but a backup costs nothing.
+
+  1. Get the SD card on to the PC, using ONE of these:
+       a) Turn the radio off, take the micro-SD card out and put it in a card reader.
+       b) Or plug the radio into the PC with the USB cable while it is ON. The radio asks
+          what to do: choose "USB Storage (SD)". (On some radios it is called
+          "USB Mass Storage".) The radio screen goes dark and the PC shows a new drive.
+  2. Open File Explorer (Windows key + E). The SD card shows as a new drive under
+     "This PC", for example "D:" or "E:". Inside it you will see folders such as
+     MODELS, SCRIPTS, SOUNDS, WIDGETS.
+  3. Make a folder on your Desktop called "Radio SD backup".
+  4. Select everything on the SD card (Ctrl + A), copy it (Ctrl + C), open the backup
+     folder and paste (Ctrl + V). Wait until copying finishes.
+
+  Leave the SD card connected for the next step.
+
+
+--------------------------------------------------------------------------------
+5. COPY THE WIDGET ONTO THE SD CARD
+--------------------------------------------------------------------------------
+
+  1. In this "V2.1 ELRS & CRSF New View Telemetry" folder, open the "SD card" folder. You will see two folders:
+     IMAGES and WIDGETS.
+  2. Select both (click IMAGES, hold Ctrl, click WIDGETS) and copy them (Ctrl + C).
+  3. Open the SD card drive in File Explorer (the top level, the same place you see
+     MODELS and SOUNDS) and paste (Ctrl + V).
+  4. Windows says the folders already exist and asks if you want to merge them.
+     Tick "Do this for all current items" and click YES. If it asks about replacing
+     files, choose "Replace the files in the destination". This only replaces an
+     older copy of New View, never your other widgets.
+  5. CHECK it went to the right place. On the SD card these must now exist:
+
+        \WIDGETS\NewView\main.lua
+        \WIDGETS\NewView\splash\splash_800x480.png   (and 4 other splash pictures)
+        \IMAGES\NewView\sat_tiles\PUT YOUR MAP TILES HERE.txt
+
+     Common mistake: a folder called "SD card" on the SD card, or "WIDGETS\WIDGETS".
+     If you see that, move the folders up so WIDGETS sits at the top of the card.
+  6. Upgrading from an older New View? The new main.lua replaces the old one. If the
+     old widget was in a different folder name (for example WIDGETS\iNavMap), delete
+     that old folder so you don't get two copies in the widget list.
+
+
+--------------------------------------------------------------------------------
+6. MAKE MAP TILES FOR YOUR FLYING FIELD
+--------------------------------------------------------------------------------
+
+  The radio can't use the internet, so the satellite map has to be saved on the SD card
+  as small picture "tiles". You only do this once per flying field.
+
+  ZOOM LEVELS (you will be asked for these)
+    Level 0 = most detail (200 m scale bar), Level 1 = 400 m, Level 2 = 800 m,
+    Level 3 = 1.6 km, Level 4 = 3.2 km. Each level up shows twice as much ground.
+    The widget uses levels 0 to 2 unless you change Min/Max zoom (part 10).
+    Recommended: levels 0, 1 and 2 for an area about 3 to 5 km around the field.
+    Long range: add levels 3 and 4 for a bigger area (level 0 for a big area is a LOT
+    of tiles: a 10 x 10 km square is about 1,500 tiles at level 0).
+
+  Use OPTION A (GMapCatcher) unless it won't run on your PC, then use OPTION B.
+
+  ---- OPTION A: GMapCatcher ----
+
+  1. Open "PC tools", then "GMapCatcher".
+  2. Double-click maps.exe. Nothing is installed; it just runs.
+     - If Windows shows "Windows protected your PC", click "More info", then "Run anyway".
+     - If it says a DLL or "MSVCR90.dll" is missing, or nothing happens, double-click
+       vcredist_x86.exe in the same folder, click through the installer, then run
+       maps.exe again.
+  3. A map window opens. In the box at the top, type the name or address of your
+     flying field (or a nearby town) and press Enter. You can also drag the map with
+     the mouse and zoom with the mouse wheel.
+  4. Change the map type to SATELLITE. Use the drop-down list at the top right of the
+     window (it may say "Map" or "Street" to start with).
+  5. Centre the map on your flying field.
+  6. Right-click on the map and choose "Batch Download".
+  7. In the Batch Download window:
+       - The centre is already your current map position.
+       - Set the width and height of the area in km, for example 4 and 4.
+       - Set the zoom levels "from" 0 "to" 2 (GMapCatcher uses the same numbers as
+         the widget).
+       - Click "Start". Wait until the counter stops and it says it has finished. This
+         can take a few minutes. Close the window when it's done.
+     Please respect the map provider's terms and don't download huge areas.
+  8. Close GMapCatcher.
+  9. Find the tiles. GMapCatcher saves two copies of everything:
+       %USERPROFILE%\.GMapCatcher\sat_tiles            256 px tiles. DO NOT use these.
+       %USERPROFILE%\.GMapCatcher\100x100\sat_tiles    100 px tiles for the radio. USE THESE.
+     To open the right one: click in the File Explorer address bar, paste
+         %USERPROFILE%\.GMapCatcher\100x100\sat_tiles
+     and press Enter. You should see folders named 0, 1, 2 (one per zoom level).
+     If the folder isn't there, the download didn't finish; repeat step 7.
+
+  ---- OPTION B: the free tile maker (Sentinel-2 satellite images) ----
+
+  Uses free European Space Agency images. Fields, roads and rivers are clear, but
+  single houses are blurry at level 0. No map provider terms to worry about.
+
+  1. Install Python 3 from https://www.python.org/downloads/ . On the FIRST installer
+     screen, tick "Add python.exe to PATH" before clicking "Install Now".
+  2. In Google Maps on the PC, right-click the middle of your flying field. The first
+     line of the menu is two numbers, for example  -33.8688, 151.2093 . Click them to
+     copy them. The first number is latitude, the second is longitude.
+  3. Open "PC tools" and double-click make_map_tiles.bat. A black window opens.
+     (If Windows shows "Windows protected your PC": More info, then Run anyway.)
+  4. Answer the questions, pressing Enter after each:
+       Centre latitude    paste or type the first number, e.g. -33.8688
+       Centre longitude   the second number, e.g. 151.2093
+       Size in km         e.g. 5  (makes a 5 km x 5 km square)
+       Zoom levels        just press Enter for 0 1 2
+  5. The first time, it installs some Python packages. That takes a few minutes.
+  6. When it says to copy the IMAGES folder, press a key to close the window.
+  7. In "PC tools" there is now a folder called "SD". Inside it is
+     IMAGES\NewView\sat_tiles\ with folders 0, 1, 2.
+
+
+--------------------------------------------------------------------------------
+7. COPY THE MAP TILES ONTO THE SD CARD
+--------------------------------------------------------------------------------
+
+  From OPTION A (GMapCatcher):
+    1. Open %USERPROFILE%\.GMapCatcher\100x100\sat_tiles (part 6, step 9).
+    2. Select everything INSIDE it (the 0, 1, 2 folders) with Ctrl + A and copy (Ctrl + C).
+    3. On the SD card, open \IMAGES\NewView\sat_tiles\ and paste (Ctrl + V).
+       If asked, merge folders and replace files.
+
+  From OPTION B (tile maker):
+    1. Open "PC tools\SD". Copy the IMAGES folder.
+    2. Paste it at the top level of the SD card and let it merge.
+
+  CHECK: on the SD card you should now have folders like
+      \IMAGES\NewView\sat_tiles\0\...
+      \IMAGES\NewView\sat_tiles\1\...
+      \IMAGES\NewView\sat_tiles\2\...
+  and deep inside them files named like s_614.png.
+  Wrong: \IMAGES\NewView\sat_tiles\sat_tiles\0 (one folder too deep), or 256 px tiles
+  from %USERPROFILE%\.GMapCatcher\sat_tiles (the map will look wrong / not line up).
+
+  You can delete "PUT YOUR MAP TILES HERE.txt". It does no harm if you leave it.
+
+  Now disconnect the SD card safely:
+    - Card reader: right-click the drive in File Explorer, choose "Eject", then remove it
+      and put it back in the radio.
+    - USB cable: right-click the drive, "Eject", then unplug the cable. The radio
+      starts up normally.
+
+
+--------------------------------------------------------------------------------
+8. FIND THE TELEMETRY SENSORS
+--------------------------------------------------------------------------------
+
+  Do this once for each model you want to use New View with.
+
+  1. Take the PROPS OFF the craft.
+  2. Turn the radio on and select the model you fly (MDL key, then choose it).
+  3. Power the craft with a battery and wait until the receiver is bound and connected
+     (solid receiver LED). Put it outside or near a window so the GPS can get satellites.
+  4. Press the MDL key, then page across the tabs to "Telemetry".
+  5. Scroll down to the sensors list. Tap or select "Discover new" (on some versions
+     "Discover new sensors"). The list fills up as sensors arrive. Wait about 10-20
+     seconds, then press "Stop discovery".
+  6. CHECK that these sensors are in the list (values should be updating):
+        GPS        position (needed for the map)
+        Sats       number of GPS satellites
+        GSpd       ground speed
+        RxBt       battery voltage
+        RQly       link quality
+        1RSS       signal strength
+        FM         flight mode (Betaflight/iNav send this; used for armed/disarmed)
+     Also used if your craft sends them:
+        Alt        barometer altitude (if missing, GPS altitude GAlt is used)
+        GAlt       GPS altitude
+        Hdg        heading
+        Yaw, Roll, Ptch  attitude (for the horizon and the cursor direction)
+        Curr, Capa, Bat%  current, used mAh, battery percent
+     If GPS is missing: check telemetry is on in the ELRS settings (telemetry ratio not
+     "Off"), and in Betaflight the GPS feature and "GPS" telemetry are on.
+  7. Press RTN / EXIT to go back.
+
+  Tip: if you have old duplicate sensors (for example two "GPS" entries), select
+  "Delete all sensors" and discover again with the craft powered.
+
+
+--------------------------------------------------------------------------------
+9. ADD THE WIDGET TO A SCREEN
+--------------------------------------------------------------------------------
+
+  See screenshots\setup-01 to setup-03 and the PDF for pictures.
+
+  1. On the main screen, press the TELE key (on touch radios you can tap the EdgeTX
+     logo at the top left and choose "Screens" / "Screens setup").
+  2. You see tabs along the top: one per screen you already have, plus a "+" tab.
+     Select the "+" tab (or "New main view") to add a new screen.
+  3. "Layout": choose the single full-screen box (1 x 1).
+  4. Turn off the extras so the map gets the whole screen:
+        Top bar   OFF
+        Flight mode  OFF
+        Sliders   OFF
+        Trims     OFF
+     Or, on EdgeTX 2.11 and later, simply turn "App mode" ON (the same thing in one switch).
+  5. Select "Setup widgets". The screen shows one empty box.
+  6. Tap the box (or press ENTER on it). A list of widgets appears.
+  7. Choose "New View Telemetry".
+     If it is not in the list, the files are in the wrong place: go back to part 5,
+     step 5.
+  8. Press RTN / EXIT until you are back on the main screen. Swipe left/right (or press
+     PAGE) to find your new screen.
+  9. With no craft powered you should see the New View load screen with
+     "NO TELEMETRY" and a moving green bar. This is correct (screenshots\01-no-telemetry).
+
+
+--------------------------------------------------------------------------------
+10. SET UP THE WIDGET
+--------------------------------------------------------------------------------
+
+  To open the settings:
+    Press TELE (Screens setup), go to the New View screen's tab, choose "Setup widgets",
+    select the New View box, then hold ENTER (or long-press the box) and choose
+    "Widget settings". See screenshots\setup-06 to setup-10.
+
+  Set each line like this:
+
+  Zoom
+    Pick a 3-position switch, for example SC. Flick UP = zoom in (more detail),
+    flick DOWN = zoom out, middle = stay. Holding it repeats every second.
+    Tip: choose a switch you don't use for anything else. You can also zoom with
+    the scroll wheel when the widget is full screen.
+  Min zoom / Max zoom
+    The zoom levels the widget is allowed to use. Make these the SAME as the levels
+    you made tiles for in part 6. Default 0 and 2.
+  Cursor follows nose  (UseYaw)
+    ON  = the cursor points where the craft's nose points (uses the Yaw sensor).
+    OFF = the cursor points the way the craft is moving (GPS track).
+    Leave ON for quads, OFF is often nicer for planes.
+  Home reset
+    Pick a switch or button. When it is on, home moves to where the craft is now.
+    Optional. Home is set automatically when you arm.
+  Cursor
+    Arrow, Drone or Plane: the symbol drawn at the craft's position.
+  Max altitude (m)     Height above home that turns red. Default 120. 0 = off.
+  Max distance (m)     Distance from home that turns red. Default 0 = off.
+  Min cell (V x100)    Lowest cell voltage. 350 = 3.50 V per cell. 330 for long range.
+  Cells (0 = auto)     Leave 0 to work it out from the battery voltage, or set your
+                       pack size (e.g. 6 for a 6S). Set it if you use Li-ion packs.
+  Min battery %        Battery percent that turns red. Default 20. Only works if the
+                       craft sends Bat%.
+  Min link quality %   Link quality that turns red. Default 50.
+  Min satellites       GPS satellites that turn red. Default 6.
+  Beep on warnings     ON = the radio beeps and vibrates every 5 seconds while ARMED
+                       and something is red. OFF = colours only.
+
+  Values turn AMBER just before a limit and RED past it.
+
+  Suggested set-ups:
+    Freestyle / park:  Min/Max zoom 0-1, Max alt 120, Max dist 0, Min cell 350
+    Long range:        Min/Max zoom 1-4, Max alt 120 (or your local limit),
+                       Max dist 0 (or your planned range), Min cell 330, Min LQ 30
+
+  Press RTN / EXIT to save and leave.
+
+
+--------------------------------------------------------------------------------
+11. BENCH TEST (PROPS OFF!)
+--------------------------------------------------------------------------------
+
+  1. Props off. Turn on the radio and go to the New View screen.
+       You see: load screen, "NO TELEMETRY".
+  2. Power the craft. Wait for it to connect.
+       You see: "WAITING FOR GPS - SATS n", where n counts up as satellites are found.
+  3. Take it outside with a clear view of the sky. When the GPS gets a fix (usually
+     6+ satellites, 1-5 minutes from cold) the screen switches to the map.
+       You see: the satellite map (or grey "no tiles here" if you're outside your tile
+       area), the cursor in the middle, a home symbol, a scale bar with "z0"/"z1"/"z2"
+       at the bottom left, and the data panel on the right (or bottom on tall screens)
+       showing DISARMED, battery, sats, altitude, speed, distance home, LQ and RSSI.
+       Compare with screenshots\03-ready-disarmed.
+  4. Flick the zoom switch up and down. The scale bar and "z" number should change,
+     and stop at your Min and Max zoom.
+  5. Turn the craft by hand. With "Cursor follows nose" ON the cursor should rotate.
+  6. Arm (props OFF!). The panel should say ARMED and home is set where you are.
+     Disarm again.
+  7. Flip your Home reset switch (if you set one). The home symbol jumps to the craft.
+  8. Unplug the craft battery. After about 3 seconds "GPS LOST" flashes at the top of
+     the map and the last position stays on screen (screenshots\13-gps-lost-no-tiles).
+
+
+--------------------------------------------------------------------------------
+12. TROUBLESHOOTING
+--------------------------------------------------------------------------------
+
+  "New View Telemetry" is not in the widget list
+    - Check \WIDGETS\NewView\main.lua is on the SD card, spelt exactly like that.
+    - Make sure it's not in \WIDGETS\NewView\NewView\ or \SD card\WIDGETS\.
+    - Restart the radio after copying.
+    - Check EdgeTX is 2.11 or newer (part 3).
+
+  The widget shows an error like "Script syntax error" or "not enough memory"
+    - Make sure main.lua copied completely (about 26 KB). Copy it again.
+    - Remove other big widgets from the same model's screens and try again.
+    - Please send us a photo of the error (part 14).
+
+  Stuck on "NO TELEMETRY"
+    - The radio isn't getting FM (flight mode) telemetry. Check the receiver is
+      connected and telemetry is on (ELRS Lua: Telemetry ratio not Off).
+    - Discover sensors again (part 8).
+
+  Stuck on "WAITING FOR GPS - SATS 0"
+    - The GPS has no fix yet. Go outside, wait longer.
+    - Check the GPS works in Betaflight/iNav Configurator.
+    - Check the "GPS" sensor exists in Model > Telemetry (part 8).
+
+  Map is grey and says "no tiles here"
+    - No tiles for this spot at this zoom level. Zoom to a level you made tiles for.
+    - Check the tiles folder layout (part 7 CHECK).
+    - Make sure you are inside the area you downloaded.
+
+  Map tiles are in the wrong place, look stretched or don't line up
+    - You copied the 256 px tiles. Use %USERPROFILE%\.GMapCatcher\100x100\sat_tiles.
+
+  Dark squares on the map
+    - Some tiles are in the wrong folder or missing. Re-copy the whole tiles folder.
+
+  Cursor points the wrong way
+    - Try turning "Cursor follows nose" OFF (uses GPS direction instead).
+
+  Altitude jumps around
+    - Your craft has no barometer, so GPS altitude is used. That is normal.
+
+  It beeps all the time
+    - Something is past a limit while armed. Look for the red value. Change that limit
+      or turn "Beep on warnings" OFF.
+
+  Battery cell count is wrong
+    - Auto-detect guesses from the first voltage it sees. Set "Cells" to your pack size.
+
+  GMapCatcher won't start
+    - Run vcredist_x86.exe once, then maps.exe again. If it still fails, use Option B.
+
+  make_map_tiles.bat says Python is not installed
+    - Re-install Python and tick "Add python.exe to PATH". Restart the PC.
+
+
+--------------------------------------------------------------------------------
+13. USING IT IN FLIGHT
+--------------------------------------------------------------------------------
+
+  - Home is set when you ARM. Arm where you are standing for the best home position.
+  - The yellow dots behind the cursor are your trail (the last 60 points, about every 15 m).
+    The trail is cleared each time you arm.
+  - "Home" in the panel is the straight-line distance back to home.
+  - Values go amber then red as you approach and pass your limits. With beeps on, the
+    radio beeps every 5 seconds while armed and something is red.
+  - "FAILSAFE" shows if the flight controller reports failsafe (Betaflight/iNav).
+  - If the link drops, "GPS LOST" flashes and the last known position stays on the map.
+    Use it to walk to the craft.
+  - Zoom any time with your zoom switch.
+
+
+--------------------------------------------------------------------------------
+14. WHAT TO TEST AND WHAT TO REPORT BACK
+--------------------------------------------------------------------------------
+
+  Please fill in "TESTER FEEDBACK FORM.txt" and send it back with photos.
+  Things we especially want to know:
+    - Your radio model, EdgeTX version, receiver (ELRS/Crossfire), flight controller
+      firmware (Betaflight/iNav/ArduPilot + version) and craft type.
+    - Did the install steps make sense? Where did you get stuck?
+    - Did the load screen fit your screen correctly?
+    - Did the map line up with the real world while flying?
+    - Did zoom, home, cursor, warnings and GPS LOST work as described?
+    - Any error messages, freezes or slow screen updates (photo please).
+    - mLRS / ArduPilot users: did it work in CRSF mode? Which values were missing?
+  Photos of the radio screen help a lot. A phone photo is fine.
+
+
+--------------------------------------------------------------------------------
+15. REMOVING THE WIDGET
+--------------------------------------------------------------------------------
+
+  1. On the radio: TELE, go to the New View screen tab, and delete the screen
+     (or choose a different widget for the box).
+  2. On the SD card, delete \WIDGETS\NewView\ and \IMAGES\NewView\ .
+  Nothing else on the radio was changed.
+
+
+New View Telemetry is by NVFPV. GMapCatcher (PC tools\GMapCatcher) is free software
+under the GNU GPL v2 and is not made by NVFPV; see its ABOUT-THIS-COPY.txt and keep its
+licence files with it if you pass this pack on.

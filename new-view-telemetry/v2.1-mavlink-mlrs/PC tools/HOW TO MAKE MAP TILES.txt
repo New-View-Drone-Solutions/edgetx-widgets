@@ -1,0 +1,74 @@
+HOW TO MAKE MAP TILES FOR NEW VIEW TELEMETRY
+============================================
+
+The widget can't use the internet, so the map pictures (tiles) have to be on the radio's SD card.
+
+
+1. WHAT THE RADIO NEEDS
+-----------------------
+- Format: PNG pictures, exactly 100 x 100 pixels each. Tiles of any other size won't line up.
+- File names: s_<number>.png (for example s_614.png).
+- Folder on the SD card:  /IMAGES/NewView/sat_tiles/
+  Inside it the tiles sit in the GMapCatcher folder layout:
+      sat_tiles/<zoom level>/<x / 1024>/<x % 1024>/<y / 1024>/s_<y % 1024>.png
+  You don't need to build this by hand. Both tools below make it for you.
+- Zoom levels: level 0 is the most detailed, and each level up shows twice as much ground.
+
+    Level   Scale bar on screen   Ground per screen pixel   Good for
+    0       200 m                 about 2.6 m               close in around the field
+    1       400 m                 about 5 m                 normal flying
+    2       800 m                 about 10 m                longer flights
+    3       1.6 km                about 20 m                long range
+    4       3.2 km                about 41 m                long range
+
+  (Ground per pixel is for about 33 degrees south. It's a little less nearer the poles.)
+- Make the same levels you set in the widget's MinZoom and MaxZoom settings (0 to 2 by default).
+- Level 0 has by far the most tiles: a 10 km x 10 km square is about 1,500 tiles at level 0,
+  about 400 at level 1 and about 100 at level 2. For big areas, start at level 1.
+
+
+2. OPTION A: GMapCatcher (in the GMapCatcher folder)
+----------------------------------------------------
+GMapCatcher is a free map viewer and downloader. This copy saves the 100 x 100 px tiles the radio needs.
+It downloads from online map providers such as Bing or OpenStreetMap. Check that provider's terms
+first: many don't allow bulk downloading.
+
+1. Open the GMapCatcher folder and double-click maps.exe. No install is needed.
+   If it doesn't start, double-click vcredist_x86.exe in the same folder once to install the
+   Microsoft Visual C++ runtime it needs, then try maps.exe again.
+2. Type your field's name or address in the search box and press Enter, or drag the map to it.
+3. Choose the Satellite map type.
+4. Right-click the map and choose Batch Download.
+   - Set the area around your field (for example 5 km each way).
+   - Set the zoom levels, for example 0 to 2. GMapCatcher numbers its zoom levels the same way as the widget.
+   - Start the download and wait for it to finish.
+5. GMapCatcher saves every tile twice:
+   - %USERPROFILE%\.GMapCatcher\sat_tiles           256 px tiles for GMapCatcher itself. DON'T use these.
+   - %USERPROFILE%\.GMapCatcher\100x100\sat_tiles   100 x 100 px tiles named s_123.png. USE THESE.
+   Paste the second path into the File Explorer address bar to open it.
+   (If you changed the map folder in GMapCatcher's settings, look in 100x100\sat_tiles inside that folder.)
+6. Copy everything inside that 100x100\sat_tiles folder into /IMAGES/NewView/sat_tiles/ on the
+   radio's SD card. Let it merge with the tiles already there.
+
+
+3. OPTION B: the tile maker (free satellite imagery, no map provider terms)
+---------------------------------------------------------------------------
+make_map_tiles.bat downloads free Copernicus Sentinel-2 satellite images and cuts them into tiles.
+Sentinel-2 is 10 m per pixel, so roads, paddocks and rivers are clear but single houses are blurry at level 0.
+
+1. Install Python 3 from https://www.python.org/downloads/ and tick "Add python.exe to PATH" on the first screen.
+2. In Google Maps, right-click your field and click the numbers at the top of the menu to copy them,
+   e.g. -33.8688, 151.2093. The first number is the latitude, the second the longitude.
+3. Double-click make_map_tiles.bat and answer the questions: latitude, longitude, the size of the
+   square in km (10 = 10 km x 10 km), and the zoom levels (press Enter for 0 1 2).
+4. The first run installs the Python packages it needs, which takes a few minutes.
+5. It makes an SD folder next to the .bat file. Copy the IMAGES folder from it onto the root of the
+   radio's SD card and let it merge.
+
+
+4. CHECKING THE TILES
+---------------------
+- With a GPS fix at the field you should see the map under the cursor.
+- "no tiles here" means there are no tiles for that spot at the current zoom level. Zoom to a level you
+  made, or make tiles that cover the spot.
+- A tile in the wrong folder shows as a dark square. A tile that isn't 100 x 100 px won't line up.

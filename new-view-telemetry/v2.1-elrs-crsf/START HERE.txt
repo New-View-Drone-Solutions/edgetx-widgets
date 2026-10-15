@@ -1,0 +1,34 @@
+V2.1 ELRS & CRSF NEW VIEW TELEMETRY  by NVFPV  (tester build)
+Live satellite map and flight telemetry for EdgeTX colour radios
+================================================================
+
+FULL STEP-BY-STEP INSTRUCTIONS: "INSTRUCTIONS - STEP BY STEP.txt" (start there).
+Pictures: "New View Telemetry - User Guide.pdf" and the "screenshots" folder.
+When you have tested it, fill in "TESTER FEEDBACK FORM.txt" and send it back.
+The video tutorial is in the "video" folder.
+
+YOU NEED
+  - An EdgeTX colour-screen radio on EdgeTX 2.11 or later (HelloRadioSky V15: EdgeTX 2.12 or later)
+  - ExpressLRS or Crossfire with telemetry on
+  - A flight controller that sends GPS over CRSF telemetry, e.g. Betaflight with a GPS
+
+QUICK INSTALL
+  1. Copy the WIDGETS and IMAGES folders from "SD card" onto the root of the radio's SD card.
+     Let them merge with the folders already there.
+  2. Make map tiles for your flying area with a tool in "PC tools" and copy them into
+     /IMAGES/NewView/sat_tiles/ on the SD card. This pack has no map tiles.
+     See "PC tools\HOW TO MAKE MAP TILES.txt" or section 5 of the guide.
+  3. On the radio, with the craft powered: Model > Telemetry > Discover new sensors.
+  4. Add a screen with the 1x1 layout (App mode on for full screen), select the widget
+     "New View Telemetry", then set it up in Widget settings:
+       Zoom          a 3-position switch: up zooms in, down zooms out
+       Min/Max zoom  the zoom levels you made tiles for (0 to 2 by default)
+       Home reset    a switch that moves home to where the craft is
+       Cursor        Arrow, Drone or Plane
+       Limits        max altitude and distance, min cell voltage, battery %, link quality and satellites
+
+Until the first GPS fix the widget shows the load screen with "NO TELEMETRY" or
+"WAITING FOR GPS - SATS n". At the first fix it switches to the map.
+
+GMapCatcher (PC tools\GMapCatcher) is free software under the GNU GPL v2 and is not made by NVFPV.
+See its ABOUT-THIS-COPY.txt. Keep its licence files with it if you share this pack.

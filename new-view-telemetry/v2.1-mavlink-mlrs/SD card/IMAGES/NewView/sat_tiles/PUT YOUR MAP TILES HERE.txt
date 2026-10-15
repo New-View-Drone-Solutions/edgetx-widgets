@@ -1,0 +1,11 @@
+New View Telemetry map tiles go in this folder.
+
+This pack has no map tiles, so you make them for your own flying area with one of the tools
+in the "PC tools" folder (GMapCatcher, or the tile maker). See "PC tools\HOW TO MAKE MAP TILES.txt"
+or the Map tiles section of the user guide.
+
+When you're done, this folder holds numbered folders, one per zoom level, for example:
+    sat_tiles\0\...   sat_tiles\1\...   sat_tiles\2\...
+
+You can delete this text file. The widget works without tiles too: it shows "no tiles here"
+on a grey map, with the cursor, home and trail still drawn.
